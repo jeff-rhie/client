@@ -1,30 +1,35 @@
-import { useState, useEffect } from 'react';
+// client/pages/[username].js
+
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import MemoList from '../../components/MemoList';
+import MemoForm from '../../components/MemoForm';
+import LogoutButton from '../../components/LogoutButton';
 
 const MemosPage = () => {
   const router = useRouter();
   const { username } = router.query;
   const [memos, setMemos] = useState([]);
-  const [newMemo, setNewMemo] = useState('');
 
   useEffect(() => {
-    // Fetch existing memos on load
     const fetchMemos = async () => {
-      if (username) {  // Ensure username is not undefined
-        const response = await axios.get(`http://localhost:3001/memos/${username}`);
-        setMemos(response.data);
+      if (username) {
+        try {
+          const response = await axios.get(`http://localhost:3001/memos/${username}`);
+          setMemos(response.data);
+        } catch (error) {
+          console.error('Error fetching memos:', error.response?.data || 'Server error');
+        }
       }
     };
     fetchMemos();
-  }, [username]);  // Fetch memos whenever username changes
+  }, [username]);
 
-  const handleAddMemo = async (e) => {
-    e.preventDefault();
+  const handleAddMemo = async (content) => {
     try {
-      const response = await axios.post(`http://localhost:3001/memos/${username}`, { content: newMemo });
+      const response = await axios.post(`http://localhost:3001/memos/${username}`, { content });
       setMemos([...memos, response.data]);
-      setNewMemo('');
     } catch (error) {
       console.error('Error adding memo:', error.response?.data || 'Server error');
     }
@@ -39,16 +44,9 @@ const MemosPage = () => {
   return (
     <div>
       <h1>Memos for {username}</h1>
-      <button onClick={handleLogout}>Logout</button>
-      <form onSubmit={handleAddMemo}>
-        <input type="text" value={newMemo} onChange={(e) => setNewMemo(e.target.value)} placeholder="Write a new memo..." />
-        <button type="submit">Add Memo</button>
-      </form>
-      <ul>
-        {memos.map(memo => (
-          <li key={memo.id}>{memo.content}</li>
-        ))}
-      </ul>
+      <LogoutButton onLogout={handleLogout} />
+      <MemoForm onSubmit={handleAddMemo} />
+      <MemoList memos={memos} />
     </div>
   );
 };

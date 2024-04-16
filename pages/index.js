@@ -1,5 +1,10 @@
-import { useEffect, useState } from 'react';
+// client/pages/index.js
+
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import LoginForm from '../components/LoginForm';
+import SignupForm from '../components/SignupForm';
+import ErrorMessage from '../components/ErrorMessage';
 
 const HomePage = () => {
   const [loginInfo, setLoginInfo] = useState({ username: '', password: '' });
@@ -66,23 +71,9 @@ const HomePage = () => {
   return (
     <div>
       <h1>Welcome to Memo App</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        <h2>Login</h2>
-        <form onSubmit={handleLogin}>
-          <input type="text" value={loginInfo.username} onChange={(e) => setLoginInfo({...loginInfo, username: e.target.value})} placeholder="Username" />
-          <input type="password" value={loginInfo.password} onChange={(e) => setLoginInfo({...loginInfo, password: e.target.value})} placeholder="Password" />
-          <button type="submit">Login</button>
-        </form>
-      </div>
-      <div>
-        <h2>Signup</h2>
-        <form onSubmit={handleSignup}>
-          <input type="text" value={signupInfo.username} onChange={(e) => setSignupInfo({...signupInfo, username: e.target.value})} placeholder="Username" />
-          <input type="password" value={signupInfo.password} onChange={(e) => setSignupInfo({...signupInfo, password: e.target.value})} placeholder="Password" />
-          <button type="submit">Signup</button>
-        </form>
-      </div>
+      <ErrorMessage error={error} />
+      <LoginForm loginInfo={loginInfo} setLoginInfo={setLoginInfo} handleLogin={handleLogin} />
+      <SignupForm signupInfo={signupInfo} setSignupInfo={setSignupInfo} handleSignup={handleSignup} />
     </div>
   );
 };
