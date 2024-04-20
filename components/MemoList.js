@@ -4,9 +4,11 @@ import React from 'react';
 
 const MemoList = ({ memos }) => {
   return (
-    <ul>
+    <ul className="divide-y divide-gray-200 h-96 overflow-auto">
       {memos.map(memo => (
-        <li key={memo.id}>{memo.content}</li>
+        <li key={memo.id} className="px-4 py-2 hover:bg-gray-50">
+          {memo.content}
+        </li>
       ))}
     </ul>
   );

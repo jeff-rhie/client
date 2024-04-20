@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 import MemoList from '../../components/MemoList';
 import MemoForm from '../../components/MemoForm';
 import LogoutButton from '../../components/LogoutButton';
+import '../../styles/globals.css';
+
 
 const MemosPage = () => {
   const router = useRouter();
@@ -42,11 +44,17 @@ const MemosPage = () => {
   };
 
   return (
-    <div>
-      <h1>Memos for {username}</h1>
-      <LogoutButton onLogout={handleLogout} />
-      <MemoForm onSubmit={handleAddMemo} />
-      <MemoList memos={memos} />
+    <div className="min-h-screen bg-gray-100 py-8">
+      <div className="container mx-auto max-w-4xl">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800">Memos for {username}</h1>
+          <LogoutButton onLogout={handleLogout} />
+        </div>
+        <MemoForm onSubmit={handleAddMemo} />
+        <div className="mt-6 bg-black rounded-lg shadow">
+          <MemoList memos={memos} />
+        </div>
+      </div>
     </div>
   );
 };
