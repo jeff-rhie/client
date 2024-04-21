@@ -1,12 +1,9 @@
-// client/pages/index.js
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import LoginForm from '../components/LoginForm';
 import SignupForm from '../components/SignupForm';
 import ErrorMessage from '../components/ErrorMessage';
 import '../styles/globals.css';
-
 
 const HomePage = () => {
   const [loginInfo, setLoginInfo] = useState({ username: '', password: '' });
@@ -29,7 +26,7 @@ const HomePage = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:3001/login', loginInfo, { withCredentials: true });
+      const response = await axios.post('http://localhost:3001/users/login', loginInfo, { withCredentials: true });
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('username', loginInfo.username);
       localStorage.setItem('loginTime', Date.now().toString());
@@ -46,8 +43,11 @@ const HomePage = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:3001/signup', signupInfo);
+      const response = await axios.post('http://localhost:3001/users/signup', signupInfo);
       setSignupInfo({ username: '', password: '' });
+      if (response.data) {
+        setError("Signup successful, please log in.");
+      }
     } catch (error) {
       setError('Signup failed: ' + (error.response?.data?.error || 'Server error'));
     }
